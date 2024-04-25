@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Exo:wght@100..900&family=Mulish:wght@200..1000&family=Rubik:wght@300..900&display=swap');
+/* font-family: "Rubik", sans-serif; <weight>: Use a value from 300 to 900
+   font-family: "Mulish", sans-serif; <weight>: Use a value from 200 to 1000
+   font-family: "Exo", sans-serif;  <weight>: Use a value from 300 to 900
+   font-family: "Cormorant Garamond", serif; <weight>: Use a value from 300 to 700
+
+
+
+
+
+*/
