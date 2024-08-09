@@ -1,1 +1,3 @@
-export async function connectYoutube() {}
+export async function connectYoutube() {
+  // connect to youtube account
+}

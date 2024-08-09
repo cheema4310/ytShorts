@@ -1,3 +1,9 @@
+import { HeaderAuth } from './header-auth';
+
 export default function Header() {
-  return <></>;
+  return (
+    <div>
+      <HeaderAuth />
+    </div>
+  );
 }
