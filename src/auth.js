@@ -1,47 +1,40 @@
 import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+import Google from 'next-auth/providers/google';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
-import connectDB from './lib/connectDB';
+import client from './lib/mongoDB';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    GoogleProvider({
+    Google({
       clientId: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      authorization: {
-        params: {
-          scope:
-            'openid email profile https://www.googleapis.com/auth/youtube.upload',
-        },
-      },
+      // authorization: {
+      //   params: {
+      //     scope:
+      //       'openid email profile https://www.googleapis.com/auth/youtube.upload',
+      //   },
+      // },
     }),
   ],
-  adapter: MongoDBAdapter({
-    db: (async () => {
-      const conn = await connectDB(); // Ensure connection to your MongoDB database
-      return conn.connection.getClient().db(); // Return the database object
-    })(),
-  }),
+  adapter: MongoDBAdapter(client),
   callbacks: {
-    async jwt({ token, account }) {
-      // Store the user's access token in the JWT on sign in
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt(token, user, account, profile) {
+      if (user) {
+        token.userId = user.id;
       }
       return token;
     },
-    async session({ session, token }) {
-      // Make the access token available in the session
-      session.accessToken = token.accessToken;
+    async session(session, token) {
+      if (token) {
+        session.user.id = token.userId;
+      }
       return session;
     },
+  },
+  session: {
+    strategy: 'jwt',
   },
 });
